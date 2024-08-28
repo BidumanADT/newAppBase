@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}  <!-- Load static files -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup Successful</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h2>Signup Successful</h2>
+        <p>Congratulations! Your account has been created successfully.</p>
+        <a href="{% url 'login' %}" class="btn">Click here to login</a>
+    </div>
+</body>
+</html>

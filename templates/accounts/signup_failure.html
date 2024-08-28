@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}  <!-- Load static files -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup Failed</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h2>Signup Failed</h2>
+
+        <p>There was a problem with your signup. Please check the following issues:</p>
+
+        <ul>
+            {% for field, errors in form.errors.items %}
+                <li>{{ field }}: 
+                    <ul>
+                        {% for error in errors %}
+                            <li>{{ error }}</li>
+                        {% endfor %}
+                    </ul>
+                </li>
+            {% endfor %}
+        </ul>
+
+        <p><a href="{% url 'signup' %}" class="btn">Try Again</a></p>
+    </div>
+</body>
+</html>

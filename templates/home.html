@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to Simple Django Auth</h1>
+        <p>This is a simple authentication system built with Django.</p>
+        <p>
+            <a href="{% url 'signup' %}">Sign Up</a> | 
+            <a href="{% url 'login' %}">Login</a>
+        </p>
+    </div>
+    <footer>
+        <p>Powered by Django</p>
+    </footer>
+</body>
+</html>

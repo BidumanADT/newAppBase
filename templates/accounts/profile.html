@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}  <!-- Load static files -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <div class="profile-container">
+        <div class="profile-header">
+            <h1>Welcome, {{ user.username }}!</h1>
+            <p>We're glad to have you here!</p>
+        </div>
+
+        <div class="profile-content">
+            <div class="profile-picture">
+                <!-- Placeholder for a profile picture -->
+                <img src="{% static 'images/default-profile.png' %}" alt="Profile Picture">
+            </div>
+            <div class="profile-info">
+                <h2>Your Profile Information</h2>
+                <p><strong>Email:</strong> {{ user.email }}</p>
+                <p><strong>Member Since:</strong> {{ user.date_joined }}</p>
+                <p>{{ user.profile.bio }}</p> <!-- Changed to use actual bio instead of placeholder text -->
+            </div>
+        </div>
+
+        <div class="profile-actions">
+            <!-- Conditional Content Based on Role -->
+            {% if is_admin %}
+                <div class="admin-content">
+                    <h3>Admin Panel</h3>
+                    <p>You have administrative access.</p>
+                    <a href="#" class="btn">Manage Users</a>
+                    <a href="#" class="btn">Manage Content</a>
+                </div>
+            {% elif is_moderator %}
+                <div class="moderator-content">
+                    <h3>Moderator Panel</h3>
+                    <p>You have moderator access.</p>
+                    <a href="#" class="btn">Manage Content</a>
+                </div>
+            {% elif is_user %}
+                <div class="user-content">
+                    <h3>User Dashboard</h3>
+                    <p>Welcome, valued user! Here are your options:</p>
+                    <a href="#" class="btn">View Your Data</a>
+                    <a href="#" class="btn">Update Preferences</a>
+                </div>
+            {% elif is_guest %}
+                <div class="guest-content">
+                    <h3>Guest Access</h3>
+                    <p>You have limited access. Please sign up to enjoy full features.</p>
+                    <a href="{% url 'signup' %}" class="btn">Sign Up</a>
+                </div>
+            {% endif %}
+
+            <!-- Common Actions for All Users -->
+            <form method="POST" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="btn">Logout</button>
+            </form>
+            <a href="{% url 'password_change' %}" class="btn">Change Password</a>
+            <a href="{% url 'edit_profile' %}" class="btn">Edit Profile</a>
+        </div>
+    </div>
+</body>
+</html>
