@@ -22,10 +22,27 @@ export const fetchRandomActivity = async (type?: string, participants?: number, 
 // add a favorite activity
 export const addFavoriteActivity = async (activityData: any) => {
     try {
-        const response = await apiClient.post('/activities/add-favorite/', activityData);
-        return response.data;
+      const response = await apiClient.post('/activities/add-favorite/', {
+        activity: activityData.activity,
+        type: activityData.type,
+        participants: activityData.participants,
+        price: activityData.price,
+        accessibility: activityData.accessibility,
+      });
+      return response.data;
     } catch (error) {
-        console.error('Error adding favorite activity: ', error);
-        throw error;
+      console.error('Error adding favorite activity:', error);
+      throw error;
     }
-};
+  };
+
+
+// export const addFavoriteActivity = async (activityData: any) => {
+//     try {
+//         const response = await apiClient.post('/activities/add-favorite/', activityData);
+//         return response.data;
+//     } catch (error) {
+//         console.error('Error adding favorite activity: ', error);
+//         throw error;
+//     }
+// };

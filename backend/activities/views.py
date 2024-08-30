@@ -3,6 +3,7 @@ from django.http import JsonResponse
 import requests
 from .models import UserFavorite
 from django.views.decorators.csrf import csrf_exempt
+import json
 
 def fetch_activity(request):
     """Fetch a random activity or a filtered activity from the BoredAPI clone."""
@@ -28,7 +29,18 @@ def add_favorite(request):
     """Add an activity to the user's favorites."""
     if request.method == "POST" and request.user.is_authenticated:
         try:
-            activity_data = request.POST
+            # Load JSON data from the request body
+            activity_data = json.loads(request.body.decode('utf-8'))
+            print("Received data:", activity_data)  # Debug print
+
+            # Ensure all required fields are present
+            required_fields = ['activity', 'type', 'participants', 'price', 'accessibility']
+            for field in required_fields:
+                if field not in activity_data:
+                    print(f"Missing field: {field}")  # Debug print for missing fields
+                    return JsonResponse({"error": f"Missing field: {field}"}, status=400)
+
+            # Create the favorite entry in the database
             favorite = UserFavorite.objects.create(
                 user=request.user,
                 activity=activity_data['activity'],
@@ -38,7 +50,14 @@ def add_favorite(request):
                 link=activity_data.get('link', ''),
                 accessibility=float(activity_data['accessibility'])
             )
-            return JsonResponse({"message": "Activity added to favorites!"}, status=201)
+            return JsonResponse({"message": "Activity saved to favorites!"}, status=201)
+
+        except json.JSONDecodeError:
+            print("Error: Failed to decode JSON")  # Specific JSON error
+            return JsonResponse({"error": "Invalid JSON format."}, status=400)
         except Exception as e:
+            print(f"Error occurred: {str(e)}")  # Debug print for other exceptions
             return JsonResponse({"error": f"An error occurred: {str(e)}"}, status=400)
+
+    print("Unauthorized or invalid request.")
     return JsonResponse({"error": "Unauthorized or invalid request."}, status=403)
