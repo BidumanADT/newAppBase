@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { fetchFavorites } from "../services/activityService";
+import { fetchFavorites, removeFavoriteActivity } from "../services/activityService";
 
 const FavoritesPage: React.FC = () => {
     const [favorites, setFavorites] = useState<any[]>([]);
@@ -9,6 +9,7 @@ const FavoritesPage: React.FC = () => {
         const getFavorites = async () => {
             try {
                 const favoriteData = await fetchFavorites();
+                console.log('Fetched favorites: ', favoriteData); //Debug print
                 setFavorites(favoriteData);
             } catch (error) {
                 setError('Failed to fetch favorites. Please try again.');
@@ -17,6 +18,16 @@ const FavoritesPage: React.FC = () => {
 
         getFavorites();
     }, []);
+
+    // function to remove saved favorite from list
+    const handleRemoveFavorite = async (favoriteId: number) => {
+        try {
+            await removeFavoriteActivity(favoriteId);
+            setFavorites(favorites.filter(favorite => favorite.id !== favoriteId));
+        } catch (error) {
+            setError('Failed to remove favorite. Please try again.');
+        }
+    };
 
     return (
         <div>
@@ -32,6 +43,7 @@ const FavoritesPage: React.FC = () => {
                             <p>Price: {favorite.price}</p>
                             <p>Accessibility: {favorite.accessibility}</p>
                             {favorite.link && <a href={favorite.link} target="_blank" rel="noopener noreferrer">More Info</a>}
+                            <button onClick={()=> handleRemoveFavorite(favorite.id)}>Remove</button>
                         </li>
                     ))}
                 </ul>

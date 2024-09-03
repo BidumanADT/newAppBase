@@ -46,3 +46,14 @@ export const addFavoriteActivity = async (activityData: any) => {
       throw error;
     }
   };
+
+  // remove a saved favorite
+  export const removeFavoriteActivity = async (favoriteId: number) => {
+    try {
+      const response = await apiClient.delete(`/activities/remove-favorite/${favoriteId}/`);
+      return response.data;
+    } catch (error) {
+      console.error('Error removing favorite activity: ', error);
+      throw error;
+    }
+  };

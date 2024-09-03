@@ -63,6 +63,7 @@ def add_favorite(request):
     print("Unauthorized or invalid request.")
     return JsonResponse({"error": "Unauthorized or invalid request."}, status=403)
 
+# save a favorite
 @csrf_exempt
 def fetch_favorites(request):
     """Fetch the user's saved favorite activities."""
@@ -70,6 +71,7 @@ def fetch_favorites(request):
         favorites = UserFavorite.objects.filter(user=request.user)
         favorites_list = [
             {
+                'id': favorite.id,
                 'activity': favorite.activity,
                 'type': favorite.activity_type,
                 'participants': favorite.participants,
@@ -82,3 +84,17 @@ def fetch_favorites(request):
         return JsonResponse({'favorites': favorites_list}, status=200)
     
     return JsonResponse({"error": "Unauthorized or invalid request."}, status=403)
+
+# remove a favorite
+@csrf_exempt
+def remove_favorite(request, favorite_id):
+    """Remove a favorite activity for the authenticated user."""
+    if request.method == "DELETE" and request.user.is_authenticated:
+        try:
+            favorite = UserFavorite.objects.get(id=favorite_id, user=request.user)
+            favorite.delete()
+            return JsonResponse({"message": "Favorite removed successfully."}, status=200)
+        except UserFavorite.DoesNotExist:
+            return JsonResponse({"error": "Favorite not found."}, status=404)
+        
+    return JsonResponse({"error": "Unauthorized or invalid  request."}, status=403)
