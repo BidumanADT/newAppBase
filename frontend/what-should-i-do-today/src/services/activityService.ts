@@ -36,13 +36,13 @@ export const addFavoriteActivity = async (activityData: any) => {
     }
   };
 
-
-// export const addFavoriteActivity = async (activityData: any) => {
-//     try {
-//         const response = await apiClient.post('/activities/add-favorite/', activityData);
-//         return response.data;
-//     } catch (error) {
-//         console.error('Error adding favorite activity: ', error);
-//         throw error;
-//     }
-// };
+  // fetch user's favorites
+  export const fetchFavorites = async () => {
+    try {
+      const response = await apiClient.get('/activities/fetch-favorites/');
+      return response.data.favorites;
+    } catch (error) {
+      console.error('Error fetching favorites: ', error);
+      throw error;
+    }
+  };

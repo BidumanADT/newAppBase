@@ -24,6 +24,7 @@ def fetch_activity(request):
     else:
         return JsonResponse({"error": "Failed to fetch activity from BoredAPI."}, status=500)
 
+######################## FAVORITES ###########################
 @csrf_exempt
 def add_favorite(request):
     """Add an activity to the user's favorites."""
@@ -60,4 +61,24 @@ def add_favorite(request):
             return JsonResponse({"error": f"An error occurred: {str(e)}"}, status=400)
 
     print("Unauthorized or invalid request.")
+    return JsonResponse({"error": "Unauthorized or invalid request."}, status=403)
+
+@csrf_exempt
+def fetch_favorites(request):
+    """Fetch the user's saved favorite activities."""
+    if request.method == "GET" and request.user.is_authenticated:
+        favorites = UserFavorite.objects.filter(user=request.user)
+        favorites_list = [
+            {
+                'activity': favorite.activity,
+                'type': favorite.activity_type,
+                'participants': favorite.participants,
+                'price': favorite.price,
+                'accessibility': favorite.accessibility,
+                'link': favorite.link,
+            } 
+            for favorite in favorites
+        ]
+        return JsonResponse({'favorites': favorites_list}, status=200)
+    
     return JsonResponse({"error": "Unauthorized or invalid request."}, status=403)
