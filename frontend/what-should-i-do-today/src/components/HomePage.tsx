@@ -1,23 +1,29 @@
 import React, { useState, useEffect } from "react";
-import { Box, Heading, Text, Button, VStack, Spinner } from "@chakra-ui/react";
+import { Box, Heading, Text, Button, VStack, Spinner, Stack } from "@chakra-ui/react";
 import { fetchRandomActivity, addFavoriteActivity } from "../services/activityService";
 
 const HomePage: React.FC = () => {
   const [activity, setActivity] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
-  // fire a useEffect to fetch a random activy upon loading homepage
+  // Function to fetch a random activity
+  const getActivity = async () => {
+    setLoading(true);
+    try {
+      const activityData = await fetchRandomActivity();
+      setActivity(activityData);
+      setError(null); // Clear error message on successful fetch
+    } catch (error) {
+      setError('Failed to fetch activity. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Fetch an activity on initial render
   useEffect(() => {
-    const getActivity = async () => {
-      try {
-        const activityData = await fetchRandomActivity();
-        setActivity(activityData);
-      } catch (error) {
-        setError('Failed to fetch activity. Please try again.');
-      }
-    };
-
     getActivity();
   }, []);
 
@@ -52,7 +58,9 @@ const HomePage: React.FC = () => {
       </Heading>
       {error && <Text color="red.500">{error}</Text>}
       {successMessage && <Text color="green.500">{successMessage}</Text>}
-      {activity ? (
+      {loading ? (
+        <Spinner size="xl" />
+      ) : (
         <Box borderWidth="1px" borderRadius="lg" p={4} w="100%" maxW="md">
           <Heading as="h2" size="md" mb={2}>
             {activity.activity}
@@ -60,12 +68,15 @@ const HomePage: React.FC = () => {
           <Text>Type: {activity.type}</Text>
           <Text>Participants: {activity.participants}</Text>
           <Text>Price: {activity.price}</Text>
-          <Button mt={4} colorScheme="green" onClick={handleSaveFavorite}>
-            Save to Favorites
-          </Button>
+          <Stack direction="row" spacing={4} mt={4} justifyContent="center" alignItems="center">
+            <Button colorScheme="green" onClick={handleSaveFavorite}>
+              Save to Favorites
+            </Button>
+            <Button colorScheme="blue" variant="outline" onClick={getActivity}>
+              Random Activity
+            </Button>
+          </Stack>
         </Box>
-      ) : (
-        <Spinner size="xl" />
       )}
     </VStack>
   );
