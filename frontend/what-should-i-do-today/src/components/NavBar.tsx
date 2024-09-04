@@ -1,48 +1,30 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Box, Flex, Link, Button, Stack } from '@chakra-ui/react';
+import { NavLink as RouterLink } from 'react-router-dom';
 
 const NavBar: React.FC = () => {
   return (
-    <nav style={styles.nav}>
-      <ul style={styles.navList}>
-        <li style={styles.navItem}>
-          <Link to="/" style={styles.navLink}>Home</Link>
-        </li>
-        <li style={styles.navItem}>
-          <Link to="/favorites" style={styles.navLink}>Favorites</Link>
-        </li>
-        <li style={styles.navItem}>
-          <Link to="/login" style={styles.navLink}>Login</Link>
-        </li>
-        <li style={styles.navItem}>
-          <Link to="/register" style={styles.navLink}>Register</Link>
-        </li>
-      </ul>
-    </nav>
-  );
-};
+    <Box bg="green.500" px={4}>
+      <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
+        <Box color="white" fontWeight="bold">What Should I Do Today?</Box>
 
-const styles = {
-  nav: {
-    padding: '10px',
-    backgroundColor: '#333',
-    display: 'flex',
-    justifyContent: 'center',
-  },
-  navList: {
-    listStyle: 'none',
-    display: 'flex',
-    margin: 0,
-    padding: 0,
-  },
-  navItem: {
-    margin: '0 10px',
-  },
-  navLink: {
-    color: '#fff',
-    textDecoration: 'none',
-    fontSize: '16px',
-  },
+        <Stack direction={'row'} spacing={4}>
+          <Button as={RouterLink} to="/" variant="link" color="white">
+            Home
+          </Button>
+          <Button as={RouterLink} to="/favorites" variant="link" color="white">
+            Favorites
+          </Button>
+          <Button as={RouterLink} to="/login" variant="link" color="white">
+            Login
+          </Button>
+          <Button as={RouterLink} to="/register" variant="link" color="white">
+            Register
+          </Button>
+        </Stack>
+      </Flex>
+    </Box>
+  );
 };
 
 export default NavBar;
