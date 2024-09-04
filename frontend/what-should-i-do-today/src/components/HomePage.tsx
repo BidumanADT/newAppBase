@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Box, Heading, Text, Button, VStack, Spinner } from "@chakra-ui/react";
 import { fetchRandomActivity, addFavoriteActivity } from "../services/activityService";
 
 const HomePage: React.FC = () => {
@@ -32,7 +33,7 @@ const HomePage: React.FC = () => {
         price: activity.price,
         accessibility: activity.accessibility,
       });
-      
+
       setSuccessMessage('Activity saved to favorites!');
       // clear message after 3 seconds
       setTimeout(() => {
@@ -45,22 +46,28 @@ const HomePage: React.FC = () => {
   };
 
   return (
-    <div>
-      <h1>What Should I Do Today?</h1>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
+    <VStack spacing={6} p={6}>
+      <Heading as="h1" size="xl" color="green.600">
+        What Should I Do Today?
+      </Heading>
+      {error && <Text color="red.500">{error}</Text>}
+      {successMessage && <Text color="green.500">{successMessage}</Text>}
       {activity ? (
-        <div>
-          <h2>{activity.activity}</h2>
-          <p>Type: {activity.type}</p>
-          <p>Participants: {activity.participants}</p>
-          <p>Price: {activity.price}</p>
-          <button onClick={handleSaveFavorite}>Save to Favorites</button>
-        </div>
+        <Box borderWidth="1px" borderRadius="lg" p={4} w="100%" maxW="md">
+          <Heading as="h2" size="md" mb={2}>
+            {activity.activity}
+          </Heading>
+          <Text>Type: {activity.type}</Text>
+          <Text>Participants: {activity.participants}</Text>
+          <Text>Price: {activity.price}</Text>
+          <Button mt={4} colorScheme="green" onClick={handleSaveFavorite}>
+            Save to Favorites
+          </Button>
+        </Box>
       ) : (
-        <p>Loading activity...</p>
+        <Spinner size="xl" />
       )}
-    </div>
+    </VStack>
   );
 };
 

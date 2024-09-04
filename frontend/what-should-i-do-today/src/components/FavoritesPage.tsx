@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Box, Heading, Text, Button, VStack, Stack } from "@chakra-ui/react";
 import { fetchFavorites, removeFavoriteActivity } from "../services/activityService";
 
 const FavoritesPage: React.FC = () => {
@@ -9,7 +10,6 @@ const FavoritesPage: React.FC = () => {
         const getFavorites = async () => {
             try {
                 const favoriteData = await fetchFavorites();
-                console.log('Fetched favorites: ', favoriteData); //Debug print
                 setFavorites(favoriteData);
             } catch (error) {
                 setError('Failed to fetch favorites. Please try again.');
@@ -30,27 +30,31 @@ const FavoritesPage: React.FC = () => {
     };
 
     return (
-        <div>
-            <h1>Your Favorite Activities</h1>
-            {error && <p style={{ color: 'red' }}>{error}</p>}
+        <VStack spacing={6} p={6}>
+            <Heading as="h1" size="xl" color="green.600">
+                Your Favorite Activities
+            </Heading>
+            {error && <Text color="red.500">{error}</Text>}
             {favorites.length > 0 ? (
-                <ul>
+                <Stack spacing={4} w="100%" maxW="md">
                     {favorites.map((favorite, index) => (
-                        <li key={index}>
-                            <h3>{favorite.activity}</h3>
-                            <p>Type: {favorite.type}</p>
-                            <p>Participants: {favorite.participants}</p>
-                            <p>Price: {favorite.price}</p>
-                            <p>Accessibility: {favorite.accessibility}</p>
-                            {favorite.link && <a href={favorite.link} target="_blank" rel="noopener noreferrer">More Info</a>}
-                            <button onClick={()=> handleRemoveFavorite(favorite.id)}>Remove</button>
-                        </li>
+                        <Box key={index} borderWidth="1px" borderRadius="lg" p={4}>
+                            <Heading as="h3" size="md" mb={2}>
+                                {favorite.activity}
+                            </Heading>
+                            <Text>Type: {favorite.type}</Text>
+                            <Text>Participants: {favorite.participants}</Text>
+                            <Text>Price: {favorite.price}</Text>
+                            <Button mt={4} colorScheme="red" onClick={() => handleRemoveFavorite(favorite.id)}>
+                                Remove
+                            </Button>
+                        </Box>
                     ))}
-                </ul>
+                </Stack>
             ) : (
-                <p>No favorites saved yet.</p>
+                <Text>No favorites saved yet.</Text>
             )}
-        </div>
+        </VStack>
     );
 };
 
