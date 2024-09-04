@@ -45,7 +45,7 @@ const FavoritesPage: React.FC = () => {
                             <Text>Type: {favorite.type}</Text>
                             <Text>Participants: {favorite.participants}</Text>
                             <Text>Price: {favorite.price}</Text>
-                            <Button mt={4} colorScheme="red" onClick={() => handleRemoveFavorite(favorite.id)}>
+                            <Button mt={4} colorScheme="red" variant="ghost" onClick={() => handleRemoveFavorite(favorite.id)}>
                                 Remove
                             </Button>
                         </Box>
